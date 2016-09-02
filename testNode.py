@@ -6,29 +6,46 @@ def duplicateTree(baseNode):
 	for i in range(len(baseNode.childs)):
 		newNode.childs.append(duplicateTree(baseNode.childs[i]))
 	return newNode
-
+def findCompatibleFemale(nodeFemale,output): #retourne le output
+	##jet de fertilite
+	if rand.randint(0,5) == 1:
+		if FUNCTIONS[nodeFemale.index][2] == output: #regarde compatibility
+			return nodeFemale
+		else:
+			for i in range(len(nodeFemale.childs)):
+				findCompatibleFemale(nodeFemale.childs[i],output)	
+def merge(node1 , node2):
+    ##jet de fertilite
+	if rand.randint(0,5) == 1:
+		##on parcours la femele a la recherche de cells fertile
+		node1 = findCompatibleFemale(node2,FUNCTIONS[node1.index][2])
+	else:
+		for i in range(len(node1.childs)):
+			merge(node1.childs[i],node2)	
 
 def reproduct(eliteNodes):
 	#on prend la base node du premier mais avec les childs du deuxieme
 	newNodes = []
 	for i in range(len(eliteNodes)):
 		for j in range(len(eliteNodes)):
-			node = Node(eliteNodes[i].index)
-			if FUNCTIONS[eliteNodes[i].index][1] == FUNCTIONS[eliteNodes[j].index][1]:
-				node.childs.append(duplicateTree(eliteNodes[j].childs[0]))
-				node.childs.append(duplicateTree(eliteNodes[j].childs[1]))
+			node = duplicateTree(eliteNodes[i]) # COPY DE L ARBRE i
+			merge(node,eliteNodes[j])
 			newNodes.append(node)
 	return newNodes
+
+
 def mutate(baseNode):
-	for i in range(len(baseNode.childs)):
-		jet = rand.randint(0,100)
-		if jet == 1:
-			index = baseNode.childs[i].index
-			baseNode.childs[i] = None
-			baseNode.childs[i] = buildBaseNode(FUNCTIONS[index][2])
-			baseNode.childs[i].buildUntilComplete()
-		else:
-			mutate(baseNode.childs[i])
+
+	if 1 == 1:
+		print("allo")
+		index = baseNode.index
+		
+		node = buildBaseNode(FUNCTIONS[index][2])
+		node.buildUntilComplete()
+		baseNode = node
+	else:
+		for i in range(len(baseNode.childs)):
+			mutate(baseNode.childs[i])	
 
 def buildBaseNode(baseNodeType):
 	#match possible starting functions
@@ -37,8 +54,13 @@ def buildBaseNode(baseNodeType):
 		if FUNCTIONS[i][2] == baseNodeType:
 			matchFunctions.append(i)
 
-	baseNode = Node(matchFunctions[rand.randint(0,len(matchFunctions)-1)])
-	return baseNode
+	return Node(matchFunctions[rand.randint(0,len(matchFunctions)-1)])
+	
+
+
+
+
+
 
 ## phase d initiation
 nodes = []
@@ -53,7 +75,24 @@ def generateInput():
 def getAnswer():
 	return  INPUTS[0] % 400 == 0 or (INPUTS[0] % 4 == 0 and INPUTS[0] % 100 != 0)
 
-while 1
+
+node1 = buildBaseNode("bin")
+node1.buildUntilComplete()
+node2 = buildBaseNode("bin")
+node2.buildUntilComplete()
+
+print("node 1")
+node1.describeUntilComplete()
+print("node 2")
+node2.describeUntilComplete()
+
+mutate(node1)
+print("node 1 mutated")
+node1.describeUntilComplete()
+
+
+"""
+while 1:
 	for i in range(0,1000):
 		generateInput()
 		for j in range(0,100):
@@ -74,11 +113,12 @@ while 1
 	##on change le tableau pour le nouveau et on le fait mutate
 	newNodes = []
 	newNodes = reproduct(eliteNodes)
+	average = 0
 	for i in range(0,100):
-		##nodes[i][0] = newNodes[i]
+		nodes[i][0] = newNodes[i]
 		mutate(nodes[i][0])
 		nodes[i][1] = 0
-	
+	input()"""
 
 
 

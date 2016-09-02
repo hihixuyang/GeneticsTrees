@@ -40,26 +40,41 @@ def MOD(values):
 
 
 INPUTS = []
-
+CONSTANTS = [4,100,400]
 def INP1(values):
 	return INPUTS[0]
+
+def CONST0(values):
+	return CONSTANTS[0]
+
+def CONST1(values):
+	return CONSTANTS[1]
+
+def CONST2(values):
+	return CONSTANTS[2]
+
 #[function,inputType,OutputType,arglen,weight]
-FUNCTIONS = [[SUB,"num" , "num",2,0],
-			 [DIV,"num" , "num",2,0],
-			 [MOD,"num" , "num",2,5],
-			 [ADD,"num" , "num",2,0],
-			 [MUL,"num" , "num",2,0],
-			 [XOR,"bin" , "bin",2,0],
+FUNCTIONS = [[SUB,"num" , "num",2,1],
+			 [DIV,"num" , "num",2,1],
+			 [MOD,"num" , "num",2,1],
+			 [ADD,"num" , "num",2,1],
+			 [MUL,"num" , "num",2,1],
+			 [XOR,"bin" , "bin",2,1],
 			 [OR,"bin" , "bin",2,1],
 			 [AND,"bin" , "bin",2,1],
 			 [NAND,"bin" , "bin",2,1],
 			 [NOR,"bin" , "bin",2,1],
-			 [G,"num" , "bin",2,0],
-			 [GE,"num" , "bin",2,0],
-			 [L,"num" , "bin",2,0],
-			 [LE,"num" , "bin",2,0],
-			 [NE,"num" , "bin",2,6],
-			 [E,"num" , "bin",2,6],
-			 [INP1,"null" , "num",0,15]]
+			 [G,"num" , "bin",2,2],
+			 [GE,"num" , "bin",2,2],
+			 [L,"num" , "bin",2,2],
+			 [LE,"num" , "bin",2,2],
+			 [NE,"num" , "bin",2,2],
+			 [E,"num" , "bin",2,2],
+
+			 [INP1,"null" , "num",0,10],
+			 [CONST0,"null" , "num",0,10],
+			 [CONST1,"null" , "num",0,10],
+			 [CONST2,"null" , "num",0,10]
+			 ]
 
 
