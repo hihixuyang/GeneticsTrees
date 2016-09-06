@@ -38,9 +38,13 @@ def MOD(values):
 	else:
 		return 0
 
-INPUTS = [100,4]
+INPUTS = [0,100,4,400]
 
 def INP1(values):
 	return INPUTS[0]
 def INP2(values):
 	return INPUTS[1]
+def INP3(values):
+	return INPUTS[2]
+def INP4(values):
+	return INPUTS[3]

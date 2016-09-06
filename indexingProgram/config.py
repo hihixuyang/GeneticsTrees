@@ -228,9 +228,6 @@ class RuleManager(object):
 			return rule.reference(vals)
 		return
 		
-		
-		
-		 
 
 ##DEFINITION OF RULES
 RuleManager.addRule(Rule("xor",XOR,"bin","bin",2,1))
@@ -249,10 +246,12 @@ RuleManager.addRule(Rule("add",ADD,"num","num",2,1))
 RuleManager.addRule(Rule("mul",MUL,"num","num",2,1))
 RuleManager.addRule(Rule("mod",MOD,"num","num",2,1))
 RuleManager.addRule(Rule("div",DIV,"num","num",2,1))
-RuleManager.addRule(Rule("in1",INP1,"null","num",0,10))
-RuleManager.addRule(Rule("in2",INP2,"null","num",0,10))
+RuleManager.addRule(Rule("in1",INP1,"null","num",0,5))
+RuleManager.addRule(Rule("in2",INP2,"null","num",0,5))
+RuleManager.addRule(Rule("in3",INP3,"null","num",0,5))
+RuleManager.addRule(Rule("in4",INP4,"null","num",0,5))
 RuleManager.initPool()
-
+"""
 sentence = RuleManager.generate()
 sentence1 = RuleManager.generate()
 sentence2 = RuleManager.generate()
@@ -264,4 +263,4 @@ sentences = RuleManager.reproduct([sentence,sentence1,sentence2])
 print("new gens")
 for i in sentences:
 	print(i)
-
+"""
