@@ -117,11 +117,85 @@ class RuleManager(object):
 						break
 				expression = ""
 		return sentence
-
-	def swap(self,sentence1,sentence2):
-		0
+	#prend une sentence et renvoie le tableau de rules de tout les rule de la sentence
+	def getRules(sentence):
+		rules = []
+		expression = ""
+		for i in range(len(sentence)):
+			if sentence[i] != "]":
+				expression += sentence[i]
+			if sentence[i] == "[":
+				expression = expression[:-1]
+				rules.append(RuleManager.getRuleByValue(expression))
+				expression = ""
+		return rules
 	def reproduct(bestSentences):
-		0
+		sentences = []
+		rules = [] #tableau de tous les rules de chaque sentences rules[0][X] 0 etant la sentence X etant la rules
+		match = [] # represente un tableau de pair de int qui represente les index des node interchangeable
+		for i in bestSentences	:
+			rules.append(RuleManager.getRules(i))
+		#on trouve toute les node interchangeable
+		for i in range(len(rules)): # i = un tableau de rulesmale
+			for j in range(len(rules)): # j = un tableau de rulesfemale
+				for k in range(len(rules[i])): # k represente un rule des rulesmale
+					for l in range(len(rules[j])): # l represente un rule dans rulefemale
+						if rules[i][k] in rules[j][l].swapPool: # si la node female est dans les possibilite du male
+							match.append([k,l])
+				#on choisi un switch entre les 2 index
+				if len(match) > 0 :
+					matchIndex = rand.randint(0,len(match)-1)
+					#on trouve le startIndex et le endIndex de la sentence du match Male
+					maleStartIndex = 0;
+					maleEndIndex = 0;
+					expressionCount = -1;
+					for m in range(len(bestSentences[i])):
+						if bestSentences[i][m] == "[":
+							expressionCount += 1
+						if expressionCount  == match[matchIndex][0]:
+							maleStartIndex = m-3
+							compteur = 0;
+							while(compteur != -1 ):
+								m += 1
+								if bestSentences[i][m] == "]":
+									compteur -= 1
+								if bestSentences[i][m] == "[":
+									compteur += 1
+							maleEndIndex = m+1
+							break
+					#on trouve le startIndex et le endIndex de la sentence du match Female
+					femaleStartIndex = 0;
+					femaleEndIndex = 0;
+					expressionCount = -1;
+					for n in range(len(bestSentences[j])):
+						if bestSentences[j][n] == "[":
+							expressionCount += 1
+						if expressionCount == match[matchIndex][1]:
+							femaleStartIndex = n-3
+							compteur = 0;
+							while(compteur != -1 ):
+								n += 1
+								if bestSentences[j][n] == "]":
+									compteur -= 1
+								if bestSentences[j][n] == "[":
+									compteur += 1
+							femaleEndIndex = n+1
+							break
+					#ON CRE L ENFANT!!!!
+					#le debut du male
+					newSentence = ""
+					newSentence = newSentence + bestSentences[i][:maleStartIndex]
+					#on met le segment female
+					newSentence = newSentence + bestSentences[j][femaleStartIndex:femaleEndIndex]
+					#on rajoute la fin male
+					newSentence = newSentence + bestSentences[i][maleEndIndex:]
+					sentences.append(newSentence)
+				else:
+					sentences.append(bestSentences[i])#aucun match possible on renvoit le male
+				match.clear()
+												
+
+		return sentences
 	def getRuleByValue(value):
 		for i in RuleManager.rules:
 			if i.value == value:
@@ -149,7 +223,6 @@ class RuleManager(object):
 		vals = []
 		for i in range(len(expressions)):
 			vals.append(RuleManager.getValue(expressions[i]))
-		#return FUNCTIONS[self.index][0](vals)
 		rule = RuleManager.getRuleByValue(expression)
 		if rule != None:
 			return rule.reference(vals)
@@ -179,11 +252,16 @@ RuleManager.addRule(Rule("div",DIV,"num","num",2,1))
 RuleManager.addRule(Rule("in1",INP1,"null","num",0,10))
 RuleManager.addRule(Rule("in2",INP2,"null","num",0,10))
 RuleManager.initPool()
+
 sentence = RuleManager.generate()
 sentence1 = RuleManager.generate()
+sentence2 = RuleManager.generate()
 print(sentence)
-sentence = RuleManager.mutate(sentence)
-print(sentence)
-#for i in RuleManager.rules[13].mutatePool:
-#	print(i.value)
+print(sentence1)
+print(sentence2)
+sentences = []
+sentences = RuleManager.reproduct([sentence,sentence1,sentence2])
+print("new gens")
+for i in sentences:
+	print(i)
 
