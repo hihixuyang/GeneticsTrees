@@ -28,10 +28,14 @@ class Rule(object):
 			
 		sentence += "]"
 		return sentence
+
+
+
+
 class RuleManager(object):
 	rules = []	
 	totalRulesWeight = 0
-	mutateRate = 100  #%
+	mutateRate = 1  #%
 	def addRule(rule):
 		RuleManager.rules.append(rule)
 		RuleManager.totalRulesWeight += rule.weight
@@ -44,7 +48,6 @@ class RuleManager(object):
 				return i.grow()
 				break
 		
-	
 	def initPool():
 		for i in RuleManager.rules:
 			for j in RuleManager.rules:
@@ -57,6 +60,7 @@ class RuleManager(object):
 				if i.output == j.output and i != j:
 					i.swapPool.append(j)
 					i.totalSwapWeight += j.weight
+
 	def mutate(sentence):
 		#pour chaque expression
 		expression = ""
@@ -66,46 +70,58 @@ class RuleManager(object):
 				expression += sentence[i]
 			if sentence[i] == "[":
 				expression = expression[:-1]
-				print(expression)
 				rule = RuleManager.getRuleByValue(expression)
 				
-				#appliquer le jet
 				if rand.randint(1,100) <= RuleManager.mutateRate:
 					#si reussit on regarde le type de mutation
-					if rand.randint(0,2) <= 2:
+					if rand.randint(0,3) <= 2:
 						#on change seulement la node
 						roll = rand.randint(0,rule.totalMutateWeight)
 						for j in rule.mutatePool:
 							roll -= j.weight
 							if roll <= 0:
-								expression = j.value #on change l expression
-							break
+								expression = j.value
+								break
 						#on insert la nouvelle expression dans la sentence
-						print(expression)
-						newsentence = sentence[:-(len(sentence)-(i-3))]
+						newsentence = sentence[:-(len(sentence)-(i-3))] 
 						newsentence += expression
 						newsentence += sentence[i:]
 						sentence = newsentence
 					else:
 						#on supprime et on reconstruit
-						roll = rand.randint(0,rule.totalswapWeight)
+						roll = rand.randint(0,rule.totalSwapWeight)
 						for j in rule.swapPool:
 							roll -= j.weight
 							if roll <= 0:
 								expression = j.value #on change l expression
-							break
-						newsentence = sentence[:-(len(sentence)-(i-3))]
-						rule = RuleManager.getRuleByValue(expression)
+								rule = RuleManager.getRuleByValue(expression)
+								break
+
+						#on insert la nouvelle expression dans la sentence	
+						#on trouve ou fini la branche a changer
+						startCutIndex = i-3
+						compteur = 0;
+						while(compteur != -1 ):
+							i += 1
+							if sentence[i] == "]":
+								compteur -= 1
+							if sentence[i] == "[":
+								compteur += 1
+							
+						endCutIndex = i+1
+						newsentence = sentence[:startCutIndex]#avant le cut
 						growSentence = rule.grow()
-						#TODO TROUVER COMMENT INSERER LE NOUVELLE GROSSENTENCE
+						newsentence = newsentence + growSentence #on rajoute la nouvelle branche
+						newsentence = newsentence + sentence[endCutIndex:]#on rajoute la fin
+						sentence = newsentence
 						break
-						#on insert la nouvelle expression dans la sentence
 				expression = ""
 		return sentence
 
 	def swap(self,sentence1,sentence2):
 		0
-		
+	def reproduct(bestSentences):
+		0
 	def getRuleByValue(value):
 		for i in RuleManager.rules:
 			if i.value == value:
@@ -168,4 +184,6 @@ sentence1 = RuleManager.generate()
 print(sentence)
 sentence = RuleManager.mutate(sentence)
 print(sentence)
+#for i in RuleManager.rules[13].mutatePool:
+#	print(i.value)
 
